@@ -1,0 +1,264 @@
+{
+  "teams": [
+    {
+      "id": "inter",
+      "name": "Inter",
+      "city": "Milano",
+      "stadium": "San Siro",
+      "strength": 85,
+      "attack": 88,
+      "defense": 86,
+      "players": [
+        "Lautaro Martinez", "Thuram", "Calhanoglu", "Barella", 
+        "Bastoni", "Pavard", "Dimarco", "Mkhitaryan"
+      ]
+    },
+    {
+      "id": "milan",
+      "name": "Milan",
+      "city": "Milano",
+      "stadium": "San Siro",
+      "strength": 82,
+      "attack": 84,
+      "defense": 80,
+      "players": [
+        "Leao", "Pulisic", "Giroud", "Reijnders", 
+        "Theo Hernandez", "Tomori", "Calabria", "Bennacer"
+      ]
+    },
+    {
+      "id": "juventus",
+      "name": "Juventus",
+      "city": "Torino",
+      "stadium": "Allianz Stadium",
+      "strength": 83,
+      "attack": 82,
+      "defense": 85,
+      "players": [
+        "Vlahovic", "Chiesa", "Yildiz", "Locatelli", 
+        "Bremer", "Gatti", "Danilo", "Rabiot"
+      ]
+    },
+    {
+      "id": "napoli",
+      "name": "Napoli",
+      "city": "Napoli",
+      "stadium": "Diego Armando Maradona",
+      "strength": 81,
+      "attack": 83,
+      "defense": 79,
+      "players": [
+        "Osimhen", "Kvaratskhelia", "Politano", "Anguissa", 
+        "Lobotka", "Di Lorenzo", "Rrahmani", "Olivera"
+      ]
+    },
+    {
+      "id": "roma",
+      "name": "Roma",
+      "city": "Roma",
+      "stadium": "Olimpico",
+      "strength": 78,
+      "attack": 79,
+      "defense": 77,
+      "players": [
+        "Dybala", "Lukaku", "Pellegrini", "Cristante", 
+        "Mancini", "Smalling", "Spinazzola", "Karsdorp"
+      ]
+    },
+    {
+      "id": "lazio",
+      "name": "Lazio",
+      "city": "Roma",
+      "stadium": "Olimpico",
+      "strength": 77,
+      "attack": 78,
+      "defense": 76,
+      "players": [
+        "Immobile", "Felipe Anderson", "Luis Alberto", "Milinkovic-Savic", 
+        "Romagnoli", "Casale", "Marusic", "Cataldi"
+      ]
+    },
+    {
+      "id": "atalanta",
+      "name": "Atalanta",
+      "city": "Bergamo",
+      "stadium": "Gewiss Stadium",
+      "strength": 80,
+      "attack": 84,
+      "defense": 75,
+      "players": [
+        "Scamacca", "Lookman", "Koopmeiners", "De Roon", 
+        "Djimsiti", "Scalvini", "Zappacosta", "Ederson"
+      ]
+    },
+    {
+      "id": "fiorentina",
+      "name": "Fiorentina",
+      "city": "Firenze",
+      "stadium": "Artemio Franchi",
+      "strength": 76,
+      "attack": 77,
+      "defense": 75,
+      "players": [
+        "Beltran", "Gonzalez", "Bonaventura", "Duncan", 
+        "Milenkovic", "Martinez Quarta", "Biraghi", "Amrabat"
+      ]
+    },
+    {
+      "id": "bologna",
+      "name": "Bologna",
+      "city": "Bologna",
+      "stadium": "Renato Dall'Ara",
+      "strength": 74,
+      "attack": 75,
+      "defense": 73,
+      "players": [
+        "Zirkzee", "Orsolini", "Ferguson", "Freuler", 
+        "Beukema", "Lucumi", "Posch", "Aebischer"
+      ]
+    },
+    {
+      "id": "torino",
+      "name": "Torino",
+      "city": "Torino",
+      "stadium": "Olimpico Grande Torino",
+      "strength": 72,
+      "attack": 73,
+      "defense": 71,
+      "players": [
+        "Zapata", "Sanabria", "Vlasic", "Ricci", 
+        "Buongiorno", "Rodriguez", "Bellanova", "Ilic"
+      ]
+    },
+    {
+      "id": "monza",
+      "name": "Monza",
+      "city": "Monza",
+      "stadium": "U-Power Stadium",
+      "strength": 70,
+      "attack": 71,
+      "defense": 69,
+      "players": [
+        "Colpani", "Djuric", "Pessina", "Bondo", 
+        "Izzo", "Mari", "Birindelli", "Gagliardini"
+      ]
+    },
+    {
+      "id": "genoa",
+      "name": "Genoa",
+      "city": "Genova",
+      "stadium": "Luigi Ferraris",
+      "strength": 69,
+      "attack": 70,
+      "defense": 68,
+      "players": [
+        "Retegui", "Gudmundsson", "Malinovskyi", "Badelj", 
+        "Dragusin", "Vasquez", "Martin", "Frendrup"
+      ]
+    },
+    {
+      "id": "verona",
+      "name": "Hellas Verona",
+      "city": "Verona",
+      "stadium": "Marcantonio Bentegodi",
+      "strength": 68,
+      "attack": 69,
+      "defense": 67,
+      "players": [
+        "Ngonge", "Bonazzoli", "Lazovic", "Duda", 
+        "Dawidowicz", "Coppola", "Faraoni", "Serdar"
+      ]
+    },
+    {
+      "id": "lecce",
+      "name": "Lecce",
+      "city": "Lecce",
+      "stadium": "Via del Mare",
+      "strength": 67,
+      "attack": 68,
+      "defense": 66,
+      "players": [
+        "Piccoli", "Strefezza", "Ramadani", "Gonzalez", 
+        "Baschirotto", "Pongracic", "Gallo", "Oudin"
+      ]
+    },
+    {
+      "id": "cagliari",
+      "name": "Cagliari",
+      "city": "Cagliari",
+      "stadium": "Unipol Domus",
+      "strength": 66,
+      "attack": 67,
+      "defense": 65,
+      "players": [
+        "Lapadula", "Luvumbo", "Nandez", "Makoumbou", 
+        "Dossena", "Goldaniga", "Augello", "Prati"
+      ]
+    },
+    {
+      "id": "empoli",
+      "name": "Empoli",
+      "city": "Empoli",
+      "stadium": "Carlo Castellani",
+      "strength": 65,
+      "attack": 66,
+      "defense": 64,
+      "players": [
+        "Caputo", "Cancellieri", "Fazzini", "Grassi", 
+        "Ismajli", "Walukiewicz", "Ebuehi", "Zurkowski"
+      ]
+    },
+    {
+      "id": "udinese",
+      "name": "Udinese",
+      "city": "Udine",
+      "stadium": "Dacia Arena",
+      "strength": 68,
+      "attack": 69,
+      "defense": 67,
+      "players": [
+        "Thauvin", "Lucca", "Samardzic", "Pereyra", 
+        "Bijol", "Perez", "Kamara", "Lovric"
+      ]
+    },
+    {
+      "id": "sassuolo",
+      "name": "Sassuolo",
+      "city": "Reggio Emilia",
+      "stadium": "Mapei Stadium",
+      "strength": 69,
+      "attack": 72,
+      "defense": 66,
+      "players": [
+        "Pinamonti", "Lauriente", "Berardi", "Thorstvedt", 
+        "Erlic", "Ferrari", "Toljan", "Boloca"
+      ]
+    },
+    {
+      "id": "frosinone",
+      "name": "Frosinone",
+      "city": "Frosinone",
+      "stadium": "Benito Stirpe",
+      "strength": 64,
+      "attack": 65,
+      "defense": 63,
+      "players": [
+        "Cheddira", "Soulé", "Harroui", "Mazzitelli", 
+        "Romagnoli", "Okoli", "Oyono", "Barrenechea"
+      ]
+    },
+    {
+      "id": "salernitana",
+      "name": "Salernitana",
+      "city": "Salerno",
+      "stadium": "Arechi",
+      "strength": 63,
+      "attack": 64,
+      "defense": 62,
+      "players": [
+        "Bonazzoli", "Dia", "Candreva", "Coulibaly", 
+        "Lovato", "Fazio", "Mazzocchi", "Kastanos"
+      ]
+    }
+  ]
+}
