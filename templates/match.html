@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ Dettaglio Match</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- PULSANTE TORNA INDIETRO -->
+        <div class="back-button">
+            <a href="/">← Torna alla lista match</a>
+        </div>
+
+        <!-- HEADER DEL MATCH -->
+        <div id="match-header" class="match-detail-header">
+            <p class="loading">Caricamento match...</p>
+        </div>
+
+        <!-- PUNTEGGIO E STATO -->
+        <div id="match-scoreboard" class="scoreboard">
+            <!-- Inserito dinamicamente -->
+        </div>
+
+        <!-- TIMELINE DEGLI EVENTI -->
+        <div class="events-section">
+            <h2>📋 Timeline Eventi</h2>
+            <div id="events-list" class="events-list">
+                <p class="no-events">Nessun evento ancora</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // CONFIGURAZIONE
+        // ====================================================================
+        
+        // L'ID del match viene passato dal server tramite il template
+        // In Tornado, {{ match_id }} viene sostituito con il valore reale
+        const MATCH_ID = "{{ match_id }}";
+        
+        console.log("🎯 Visualizzazione dettaglio match:", MATCH_ID);
+
+        // ====================================================================
+        // VARIABILI GLOBALI
+        // ====================================================================
+        
+        let socket = null;
+        let matchData = null;
+
+        // ====================================================================
+        // CONNESSIONE WEBSOCKET
+        // ====================================================================
+        
+        /**
+         * Inizializza la connessione WebSocket.
+         * Questa pagina riceve tutti gli aggiornamenti ma mostra solo
+         * quelli relativi al match corrente (filtro lato client).
+         */
+        function connectWebSocket() {
+            socket = new WebSocket("ws://localhost:8888/ws");
+            
+            socket.onopen = () => {
+                console.log("✅ WebSocket connesso");
+            };
+            
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                
+                // ----------------------------------------------------------------
+                // GESTIONE STATO INIZIALE
+                // ----------------------------------------------------------------
+                if (message.type === "initial_state") {
+                    // Estrae solo il match che ci interessa
+                    matchData = message.matches[MATCH_ID];
+                    
+                    if (!matchData) {
+                        document.getElementById("match-header").innerHTML = 
+                            '<p class="error">❌ Match non trovato</p>';
+                        return;
+                    }
+                    
+                    console.log("📋 Dati match ricevuti:", matchData);
+                    renderMatchDetail();
+                }
+                
+                // ----------------------------------------------------------------
+                // GESTIONE AGGIORNAMENTI
+                // ----------------------------------------------------------------
+                else if (message.type === "match_update") {
+                    // Controlla se tra i match aggiornati c'è il nostro
+                    const updatedMatch = message.matches.find(m => m.id === MATCH_ID);
+                    
+                    if (updatedMatch) {
+                        console.log("🔄 Aggiornamento match ricevuto");
+                        matchData = updatedMatch;
+                        renderMatchDetail();
+                        
+                        // --------------------------------------------------------
+                        // NOTIFICA VISIVA PER EVENTI IMPORTANTI
+                        // --------------------------------------------------------
+                        // Se c'è stato un nuovo evento, mostra un flash
+                        flashUpdate();
+                    }
+                }
+            };
+            
+            socket.onclose = () => {
+                console.log("❌ WebSocket disconnesso - Riconnessione...");
+                setTimeout(connectWebSocket, 3000);
+            };
+            
+            socket.onerror = (error) => {
+                console.error("❌ Errore WebSocket:", error);
+            };
+        }
+
+        // ====================================================================
+        // FUNZIONI DI RENDERING
+        // ====================================================================
+        
+        /**
+         * Renderizza tutti i dettagli del match:
+         * - Header con squadre e stato
+         * - Scoreboard con punteggio
+         * - Timeline completa degli eventi
+         */
+        function renderMatchDetail() {
+            if (!matchData) return;
+            
+            renderHeader();
+            renderScoreboard();
+            renderEvents();
+        }
+        
+        /**
+         * Renderizza l'header con le informazioni principali del match.
+         */
+        function renderHeader() {
+            const header = document.getElementById("match-header");
+            
+            // Determina lo stato del match
+            let statusBadge = "";
+            if (matchData.status === "live") {
+                statusBadge = '<span class="badge badge-live">🔴 LIVE</span>';
+            } else if (matchData.status === "scheduled") {
+                statusBadge = '<span class="badge badge-scheduled">📅 Programmato</span>';
+            } else {
+                statusBadge = '<span class="badge badge-finished">✅ Terminato</span>';
+            }
+            
+            header.innerHTML = `
+                <div class="match-title">
+                    <h1>${matchData.home} vs ${matchData.away}</h1>
+                    ${statusBadge}
+                </div>
+            `;
+        }
+        
+        /**
+         * Renderizza il tabellone con il punteggio e il minuto di gioco.
+         */
+        function renderScoreboard() {
+            const scoreboard = document.getElementById("match-scoreboard");
+            
+            // Determina cosa mostrare per il tempo
+            let timeDisplay = "";
+            if (matchData.status === "live") {
+                timeDisplay = `<div class="match-minute">${matchData.minute}'</div>`;
+            } else if (matchData.status === "finished") {
+                timeDisplay = `<div class="match-minute">FT</div>`;
+            } else {
+                timeDisplay = `<div class="match-minute">---</div>`;
+            }
+            
+            scoreboard.innerHTML = `
+                <div class="score-display">
+                    <div class="team-score">
+                        <div class="team-name">${matchData.home}</div>
+                        <div class="score-number">${matchData.score.home}</div>
+                    </div>
+                    
+                    ${timeDisplay}
+                    
+                    <div class="team-score">
+                        <div class="team-name">${matchData.away}</div>
+                        <div class="score-number">${matchData.score.away}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        /**
+         * Renderizza la timeline completa degli eventi del match.
+         * Gli eventi sono mostrati in ordine cronologico inverso
+         * (i più recenti in alto).
+         */
+        function renderEvents() {
+            const eventsList = document.getElementById("events-list");
+            
+            // ----------------------------------------------------------------
+            // VERIFICA SE CI SONO EVENTI
+            // ----------------------------------------------------------------
+            if (!matchData.events || matchData.events.length === 0) {
+                eventsList.innerHTML = '<p class="no-events">Nessun evento ancora</p>';
+                return;
+            }
+            
+            // ----------------------------------------------------------------
+            // ORDINA GLI EVENTI (PIÙ RECENTI PRIMA)
+            // ----------------------------------------------------------------
+            const sortedEvents = [...matchData.events].reverse();
+            
+            // ----------------------------------------------------------------
+            // GENERA L'HTML PER OGNI EVENTO
+            // ----------------------------------------------------------------
+            const eventsHTML = sortedEvents.map(event => {
+                return createEventItem(event);
+            }).join("");
+            
+            eventsList.innerHTML = eventsHTML;
+        }
+        
+        /**
+         * Crea l'HTML per un singolo evento.
+         * 
+         * @param {Object} event - I dati dell'evento
+         * @returns {String} HTML dell'evento
+         */
+        function createEventItem(event) {
+            // ----------------------------------------------------------------
+            // DETERMINA ICONA E COLORE IN BASE AL TIPO
+            // ----------------------------------------------------------------
+            let icon = "";
+            let eventClass = "";
+            let description = "";
+            
+            // Determina quale squadra ha causato l'evento
+            const teamName = event.team === "home" ? matchData.home : matchData.away;
+            
+            switch(event.type) {
+                case "goal":
+                    icon = "⚽";
+                    eventClass = "event-goal";
+                    description = `<strong>${event.player}</strong> (${teamName})`;
+                    break;
+                    
+                case "yellow_card":
+                    icon = "🟨";
+                    eventClass = "event-yellow";
+                    description = `Cartellino giallo per <strong>${event.player}</strong> (${teamName})`;
+                    break;
+                    
+                case "red_card":
+                    icon = "🟥";
+                    eventClass = "event-red";
+                    description = `Cartellino rosso per <strong>${event.player}</strong> (${teamName})`;
+                    break;
+                    
+                case "substitution":
+                    icon = "🔁";
+                    eventClass = "event-substitution";
+                    description = `Sostituzione (${teamName}): <strong>${event.player_out}</strong> ➡️ <strong>${event.player_in}</strong>`;
+                    break;
+                    
+                default:
+                    icon = "📢";
+                    eventClass = "event-other";
+                    description = `Evento generico`;
+            }
+            
+            // ----------------------------------------------------------------
+            // GENERA L'HTML
+            // ----------------------------------------------------------------
+            return `
+                <div class="event-item ${eventClass}">
+                    <div class="event-time">
+                        ${event.minute}'
+                    </div>
+                    <div class="event-icon-large">
+                        ${icon}
+                    </div>
+                    <div class="event-description">
+                        ${description}
+                    </div>
+                </div>
+            `;
+        }
+        
+        /**
+         * Mostra un flash visivo quando arriva un aggiornamento.
+         * Aggiunge temporaneamente una classe CSS che crea un'animazione.
+         */
+        function flashUpdate() {
+            const scoreboard = document.getElementById("match-scoreboard");
+            scoreboard.classList.add("flash-update");
+            
+            // Rimuove la classe dopo l'animazione
+            setTimeout(() => {
+                scoreboard.classList.remove("flash-update");
+            }, 1000);
+        }
+
+        // ====================================================================
+        // INIZIALIZZAZIONE
+        // ====================================================================
+        
+        window.onload = () => {
+            console.log("🚀 Pagina dettaglio match caricata");
+            connectWebSocket();
+        };
+    </script>
+</body>
+</html>

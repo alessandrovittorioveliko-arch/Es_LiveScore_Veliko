@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ Eventi Sportivi Live</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>⚽ Eventi Sportivi Live</h1>
+            <p class="subtitle">Risultati e aggiornamenti in tempo reale</p>
+            <div id="connection-status" class="status-disconnected">
+                🔴 Disconnesso
+            </div>
+        </header>
+
+        <!-- LISTA MATCH -->
+        <div id="matches-container">
+            <!-- I match verranno inseriti qui dinamicamente dal JavaScript -->
+            <p class="loading">Caricamento match in corso...</p>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // VARIABILI GLOBALI
+        // ====================================================================
+        
+        // Oggetto WebSocket per la connessione al server
+        let socket = null;
+        
+        // Oggetto per memorizzare i dati dei match
+        // Struttura: { "1": {...}, "2": {...}, ecc. }
+        let matchesData = {};
+
+        // ====================================================================
+        // CONNESSIONE WEBSOCKET
+        // ====================================================================
+        
+        /**
+         * Inizializza la connessione WebSocket con il server.
+         * Gestisce gli eventi: open, message, close, error
+         */
+        function connectWebSocket() {
+            // Crea una nuova connessione WebSocket
+            // ws:// è il protocollo WebSocket (wss:// per connessioni sicure)
+            socket = new WebSocket("ws://localhost:8888/ws");
+            
+            // ----------------------------------------------------------------
+            // EVENTO: Connessione stabilita
+            // ----------------------------------------------------------------
+            socket.onopen = () => {
+                console.log("✅ WebSocket connesso");
+                
+                // Aggiorna l'indicatore di stato nella UI
+                const statusEl = document.getElementById("connection-status");
+                statusEl.textContent = "🟢 Connesso";
+                statusEl.className = "status-connected";
+            };
+            
+            // ----------------------------------------------------------------
+            // EVENTO: Messaggio ricevuto dal server
+            // ----------------------------------------------------------------
+            socket.onmessage = (event) => {
+                // Parsing del JSON ricevuto
+                const message = JSON.parse(event.data);
+                
+                console.log("📨 Messaggio ricevuto:", message.type);
+                
+                // Gestisce diversi tipi di messaggi
+                if (message.type === "initial_state") {
+                    // Stato iniziale: ricevuto quando ci si connette
+                    // Contiene tutti i match con il loro stato attuale
+                    console.log("📋 Stato iniziale ricevuto");
+                    matchesData = message.matches;
+                    renderAllMatches();
+                    
+                } else if (message.type === "match_update") {
+                    // Aggiornamento: ricevuto periodicamente con i match modificati
+                    console.log("🔄 Aggiornamento match ricevuto");
+                    
+                    // Aggiorna i dati dei match modificati
+                    message.matches.forEach(updatedMatch => {
+                        matchesData[updatedMatch.id] = updatedMatch;
+                    });
+                    
+                    // Ri-renderizza tutti i match con i nuovi dati
+                    renderAllMatches();
+                }
+            };
+            
+            // ----------------------------------------------------------------
+            // EVENTO: Connessione chiusa
+            // ----------------------------------------------------------------
+            socket.onclose = () => {
+                console.log("❌ WebSocket disconnesso");
+                
+                // Aggiorna l'indicatore di stato
+                const statusEl = document.getElementById("connection-status");
+                statusEl.textContent = "🔴 Disconnesso - Riconnessione...";
+                statusEl.className = "status-disconnected";
+                
+                // Tenta di riconnettersi dopo 3 secondi
+                setTimeout(connectWebSocket, 3000);
+            };
+            
+            // ----------------------------------------------------------------
+            // EVENTO: Errore di connessione
+            // ----------------------------------------------------------------
+            socket.onerror = (error) => {
+                console.error("❌ Errore WebSocket:", error);
+            };
+        }
+
+        // ====================================================================
+        // FUNZIONI DI RENDERING
+        // ====================================================================
+        
+        /**
+         * Renderizza tutti i match nella pagina.
+         * Crea le card HTML per ogni match e le inserisce nel container.
+         */
+        function renderAllMatches() {
+            const container = document.getElementById("matches-container");
+            
+            // Pulisce il container (rimuove il messaggio di caricamento o i vecchi match)
+            container.innerHTML = "";
+            
+            // Verifica se ci sono match da visualizzare
+            if (Object.keys(matchesData).length === 0) {
+                container.innerHTML = '<p class="loading">Nessun match disponibile</p>';
+                return;
+            }
+            
+            // ----------------------------------------------------------------
+            // ORDINA I MATCH PER STATO
+            // ----------------------------------------------------------------
+            // Vogliamo mostrare prima i match live, poi quelli programmati, poi quelli finiti
+            const matchesArray = Object.values(matchesData);
+            
+            const liveMatches = matchesArray.filter(m => m.status === "live");
+            const scheduledMatches = matchesArray.filter(m => m.status === "scheduled");
+            const finishedMatches = matchesArray.filter(m => m.status === "finished");
+            
+            // ----------------------------------------------------------------
+            // RENDERIZZA OGNI CATEGORIA
+            // ----------------------------------------------------------------
+            
+            if (liveMatches.length > 0) {
+                container.innerHTML += '<h2 class="section-title">🔴 LIVE</h2>';
+                liveMatches.forEach(match => {
+                    container.innerHTML += createMatchCard(match);
+                });
+            }
+            
+            if (scheduledMatches.length > 0) {
+                container.innerHTML += '<h2 class="section-title">📅 Programmati</h2>';
+                scheduledMatches.forEach(match => {
+                    container.innerHTML += createMatchCard(match);
+                });
+            }
+            
+            if (finishedMatches.length > 0) {
+                container.innerHTML += '<h2 class="section-title">✅ Terminati</h2>';
+                finishedMatches.forEach(match => {
+                    container.innerHTML += createMatchCard(match);
+                });
+            }
+        }
+        
+        /**
+         * Crea l'HTML per la card di un singolo match.
+         * 
+         * @param {Object} match - I dati del match
+         * @returns {String} HTML della card
+         */
+        function createMatchCard(match) {
+            // ----------------------------------------------------------------
+            // DETERMINA LA CLASSE CSS IN BASE ALLO STATO
+            // ----------------------------------------------------------------
+            let statusClass = "";
+            let statusText = "";
+            let statusIcon = "";
+            
+            if (match.status === "live") {
+                statusClass = "match-live";
+                statusText = "LIVE";
+                statusIcon = "🔴";
+            } else if (match.status === "scheduled") {
+                statusClass = "match-scheduled";
+                statusText = "Programmato";
+                statusIcon = "📅";
+            } else {
+                statusClass = "match-finished";
+                statusText = "Terminato";
+                statusIcon = "✅";
+            }
+            
+            // ----------------------------------------------------------------
+            // OTTIENI GLI ULTIMI EVENTI IMPORTANTI
+            // ----------------------------------------------------------------
+            const recentEvents = getRecentEvents(match);
+            
+            // ----------------------------------------------------------------
+            // GENERA L'HTML DELLA CARD
+            // ----------------------------------------------------------------
+            return `
+                <div class="match-card ${statusClass}" onclick="goToMatch('${match.id}')">
+                    <div class="match-status">
+                        ${statusIcon} ${statusText}
+                    </div>
+                    
+                    <div class="match-time">
+                        ${match.status === "live" ? match.minute + "'" : ""}
+                        ${match.status === "finished" ? "FT" : ""}
+                        ${match.status === "scheduled" ? "---" : ""}
+                    </div>
+                    
+                    <div class="match-teams">
+                        <div class="team home">
+                            ${match.home}
+                        </div>
+                        
+                        <div class="match-score">
+                            ${match.score.home} - ${match.score.away}
+                        </div>
+                        
+                        <div class="team away">
+                            ${match.away}
+                        </div>
+                    </div>
+                    
+                    <div class="match-events-preview">
+                        ${recentEvents}
+                    </div>
+                    
+                    <div class="match-link">
+                        👁️ Vedi dettagli
+                    </div>
+                </div>
+            `;
+        }
+        
+        /**
+         * Genera una preview degli ultimi eventi del match.
+         * Mostra le icone degli eventi recenti (goal, cartellini, ecc.)
+         * 
+         * @param {Object} match - I dati del match
+         * @returns {String} HTML con le icone degli eventi
+         */
+        function getRecentEvents(match) {
+            if (!match.events || match.events.length === 0) {
+                return '<span class="no-events">Nessun evento</span>';
+            }
+            
+            // Prende gli ultimi 5 eventi
+            const lastEvents = match.events.slice(-5);
+            
+            // Mappa ogni evento alla sua icona
+            const eventsHTML = lastEvents.map(event => {
+                let icon = "";
+                
+                switch(event.type) {
+                    case "goal":
+                        icon = "⚽";
+                        break;
+                    case "yellow_card":
+                        icon = "🟨";
+                        break;
+                    case "red_card":
+                        icon = "🟥";
+                        break;
+                    case "substitution":
+                        icon = "🔁";
+                        break;
+                    default:
+                        icon = "📢";
+                }
+                
+                return `<span class="event-icon" title="${event.player} - ${event.minute}'">${icon}</span>`;
+            }).join(" ");
+            
+            return eventsHTML;
+        }
+        
+        /**
+         * Naviga alla pagina dettaglio del match.
+         * 
+         * @param {String} matchId - L'ID del match
+         */
+        function goToMatch(matchId) {
+            window.location.href = `/match/${matchId}`;
+        }
+
+        // ====================================================================
+        // INIZIALIZZAZIONE
+        // ====================================================================
+        
+        // Quando la pagina è caricata, connetti il WebSocket
+        window.onload = () => {
+            console.log("🚀 Applicazione avviata");
+            connectWebSocket();
+        };
+    </script>
+</body>
+</html>
