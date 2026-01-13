@@ -9,7 +9,7 @@
       "attack": 88,
       "defense": 82,
       "players": {
-        "goalkeepers": ["Marco Carnesecchi", "Francesco Rossi", "Marco Sportiello"],
+        "goalkeepers": ["Marco Carnesecchi"],
         "defenders": ["Honest Ahanor", "Raoul Bellanova", "Lorenzo Bernasconi", "Berat Djimsiti", "Isak Hien", "Sead Kolasinac", "Odilon Koussounou", "Giorgio Scalvini", "Davide Zappacosta"],
         "midfielders": ["Marco Brescianini", "Marten De Roon", "Ederson da Silva", "Daniel Maldini", "Milan Musah", "Mario Pasalic", "Lazar Samardzic", "Nicola Zalewski"],
         "forwards": ["Charles De Ketelaere", "Nikola Krstovic", "Ademola Lookman", "Gianluca Scamacca", "Kamaldeen Sulemana"]
@@ -24,7 +24,7 @@
       "attack": 80,
       "defense": 76,
       "players": {
-        "goalkeepers": ["Massimo Pessina", "Federico Ravaglia", "Lukasz Skorupski"],
+        "goalkeepers": ["Federico Ravaglia"],
         "defenders": ["Kevin Bonifazi", "Nicolo Casale", "Lorenzo De Silvestri", "Torbjorn Heggem", "Emil Holm", "Mihajlo Ilic", "Jovan Ivanisevic", "Jhon Lucumi", "Charalampos Lykogiannis", "Petar Markovic", "Juan Miranda", "Martin Vitik", "Nadir Zortea"],
         "midfielders": ["Federico Bernardeschi", "Giovanni Fabbian", "Lewis Ferguson", "Remo Freuler", "Jordi Jaku", "Nikola Moro", "Jens Odgaard", "Tommaso Pobega", "Jonathan Rowe", "Ibrahim Sulemana", "Aaron Velilles"],
         "forwards": ["Nicolo Cambiaghi", "Santiago Castro", "Thijs Dallinga", "Nicolas Dominguez", "Ciro Immobile", "Riccardo Orsolini"]
@@ -39,7 +39,7 @@
       "attack": 72,
       "defense": 68,
       "players": {
-        "goalkeepers": ["Elia Caprile", "Boris Radunovic"],
+        "goalkeepers": ["Elia Caprile"],
         "defenders": ["Alessandro Di Pardo", "Riyad Idrissi", "Sebastiano Luperto", "Yerry Mina", "Adam Obert", "Marco Palestra", "Juan Rodriguez", "Gabriele Zappa", "Ze Pedro"],
         "midfielders": ["Michel Adopo", "Alessandro Deiola", "Mattia Felici", "Michael Folorunsho", "Gianluca Gaetano", "Joseph Liteta", "Luca Mazzitelli", "Matteo Prati", "Marko Rog"],
         "forwards": ["Andrea Belotti", "Gennaro Borrelli", "Sebastiano Esposito", "Semih Kılıcsoy", "Zito Luvumbo", "Leonardo Pavoletti"]
@@ -54,7 +54,7 @@
       "attack": 70,
       "defense": 66,
       "players": {
-        "goalkeepers": ["Jean Butez", "Nikola Cavlina", "Henrique Menke", "Mauro Vigorito"],
+        "goalkeepers": ["Jean Butez"],
         "defenders": ["Lorenzo De Paula", "Diego Carlos", "Alberto Dossena", "Edoardo Goldaniga", "Marc-Oliver Kempf", "Alberto Moreno", "Stefan Posch", "Jacobo Ramon", "Sergi Roberto", "Hrvoje Smolcic", "Alex Valle", "Ignace Van der Brempt", "Mergim Vojvoda"],
         "midfielders": ["Martin Baturina", "Maxence Caqueret", "Lucas Da Cunha", "Nicolas Kuhn", "Nico Paz", "Maximo Perrone"],
         "forwards": ["Ivan Azon", "Assane Diao", "Tasos Douvikas", "Kristians Mezsargs", "Alvaro Morata", "Jesus Rodriguez"]
@@ -69,7 +69,7 @@
       "attack": 68,
       "defense": 64,
       "players": {
-        "goalkeepers": ["Emil Audero", "Lapo Nava", "Gianluca Saro", "Marco Silvestri"],
+        "goalkeepers": ["Emil Audero"],
         "defenders": ["Tommaso Barbieri", "Federico Baschirotto", "Matteo Bianchetti", "Federico Ceccherini", "Floriani Mussolini", "Francesco Folino", "Giuseppe Pezzella", "Leonardo Sernicola"],
         "midfielders": ["Warren Bondo", "Michele Collocolo", "Alberto Grassi", "Dennis Johnsen", "Dachi Lordkipanidze", "Tommaso Milanese", "Martin Payero", "Jeremy Sarmiento", "Filippo Terracciano", "Mattia Valoti", "Jari Vandeputte", "Franco Vazquez", "Alessio Zerbin"],
         "forwards": ["Federico Bonazzoli", "Manuel De Luca", "Nouroudine Faye", "Faris Moumbagna", "Marco Nasti", "David Okereke", "Antonio Sanabria", "Jamie Vardy"]
@@ -84,7 +84,7 @@
       "attack": 82,
       "defense": 78,
       "players": {
-        "goalkeepers": ["David De Gea", "Tommaso Martinelli"],
+        "goalkeepers": ["David De Gea"],
         "defenders": ["Pietro Comuzzo", "Dodo", "Niccolo Fortini", "Robin Gosens", "Eddy Koaudio", "Eman Kospo", "Tariq Lamptey", "Pablo Mari", "Fabiano Parisi", "Marin Pongracic", "Luca Ranieri", "Mattia Viti"],
         "midfielders": ["Nicolo Fagioli", "Jacopo Fazzini", "Albert Gudmundsson", "Rolando Mandragora", "Cher Ndour", "Hans Nicolussi Caviglia", "Amir Richardson", "Simon Sohm", "Manor Solomon"],
         "forwards": ["Maxwel Cornet", "Edin Dzeko", "Moise Kean", "Roberto Piccoli"]
@@ -99,7 +99,7 @@
       "attack": 74,
       "defense": 70,
       "players": {
-        "goalkeepers": ["Nicola Leali", "Benjamin Siegrist", "Daniele Sommariva", "Franz Stolz"],
+        "goalkeepers": ["Nicola Leali"],
         "defenders": ["Aaron Martin", "Alessandro Mercandalli", "Brooke Norton Cuffy", "Leo Ostigard", "Sebastian Otoa", "Stefano Sabelli", "Johan Vasquez"],
         "midfielders": ["Maxwel Cornet", "Hugo Cuenca", "Mikael Ellertsson", "Morten Frendrup", "Albert Gronbaek", "Elton Jesus", "Gael Lafont", "Ruslan Malinovsky", "Patrizio Masini", "Junior Messias", "Jean Jr Onana", "Nicolae Stanciu", "Morten Thorsby"],
         "forwards": ["Valentin Carboni", "Lorenzo Colombo", "Jeff Ekhator", "Caleb Ekuban", "Lorenzo Venturino", "Vitinha"]
@@ -114,7 +114,7 @@
       "attack": 92,
       "defense": 88,
       "players": {
-        "goalkeepers": ["Raffaele Di Gennaro", "Josep Martinez", "Yann Sommer"],
+        "goalkeepers": ["Yann Sommer"],
         "defenders": ["Francesco Acerbi", "Manuel Akanji", "Alessandro Bastoni", "Aurel Ludger Bisseck", "Carlos Augusto", "Matteo Darmian", "Stefan De Vrij", "Federico Dimarco", "Denzel Dumfries", "Luis Henrique", "Tomas Palacios"],
         "midfielders": ["Nicolo Barella", "Hadam Calhanoglu", "Andy Diouf", "Davide Frattesi", "Mkhitaryan", "Petar Sucic", "Piotor Zielinski"],
         "forwards": ["Bonny", "Francesco Pio Esposito", "Lautaro Martinez", "Marcus Thuram"]
@@ -129,7 +129,7 @@
       "attack": 86,
       "defense": 88,
       "players": {
-        "goalkeepers": ["Michele Di Gregorio", "Mattia Perin", "Carlo Pinsoglio"],
+        "goalkeepers": ["Michele Di Gregorio"],
         "defenders": ["Gleison Bremer", "Juan Cabal", "Andrea Cambiaso", "Federico Gatti", "Joao Mario", "Pierre Kalulu", "Lloyd Kelly", "Jonas Roohi", "Daniele Rugani"],
         "midfielders": ["Vasiliije Adzic", "Francisco Conceicao", "Douglas Luiz", "Teun Koopmeiners", "Filip Kostic", "Manuel Locatelli", "Weston McKennie", "Fabio Miretti", "Khephren Thuram", "Edon Zhegova"],
         "forwards": ["Jonathan David", "Arkadiusz Milik", "Lois Openda", "Dusan Vlahovic", "Kenan Yıldız"]
@@ -144,7 +144,7 @@
       "attack": 80,
       "defense": 78,
       "players": {
-        "goalkeepers": ["Alessio Furlanetto", "Chrīstos Mandas", "Ivan Provedel"],
+        "goalkeepers": ["Ivan Provedel"],
         "defenders": ["Samuel Gigot", "Mario Fuentes Gila", "Elseid Hysaj", "Manuel Lazzari", "Adam Marusic", "Patric", "Luca Pellegrini", "Oliver Provstgaard", "Alessio Romagnoli", "Nuno Tavares"],
         "midfielders": ["Toma Basic", "Reda Belahyane", "Danilo Cataldi", "Cristo Munoz", "Fisayo Dele Bashiru", "Matteo Guendouzi", "Gustav Isaksen", "Cristiano Lombardi", "Nicolo Rovella", "Matias Vecino", "Mattia Zaccagni"],
         "forwards": ["Matteo Cancellieri", "Jose Gimenez Castellanos", "Boulaye Dia", "Tijjani Noslin", "Pedro"]
@@ -159,7 +159,7 @@
       "attack": 71,
       "defense": 67,
       "players": {
-        "goalkeepers": ["Wladimiro Falcone", "Christian Fruchtl", "Jasper Samooja"],
+        "goalkeepers": ["Wladimiro Falcone"],
         "defenders": ["Antonino Gallo", "Kialonda Gaspar", "Frederic Guilbert", "Gaby Jean", "Owen Kouassi", "Corrie Ndaba", "Matias Perez", "William Rashidi", "Elijah Scott", "Jamil Siebert", "Gabriel Tiago", "Danilo Veiga"],
         "midfielders": ["Lameck Banda", "Medon Berisha", "Lassana Coulibaly", "Olaf Gorter", "Johann Helgason", "Mohamed Kaba", "Flip Marchwinski", "Tete Morente", "Santiago Pierotti", "Balthazar Pierret", "Hamza Rafia", "Ylber Ramadani", "Marco Sala", "Riccardo Sottil", "Enes Yilmaz"],
         "forwards": ["Rares Burnete", "Francesco Camarda", "Milos Jovis", "Ndri Konan", "Esteban Paco", "Nikola Stulic"]
@@ -174,7 +174,7 @@
       "attack": 88,
       "defense": 84,
       "players": {
-        "goalkeepers": ["Mike Maignan", "Pietro Terracciano", "Lorenzo Torriani"],
+        "goalkeepers": ["Mike Maignan"],
         "defenders": ["Zachary Athekame", "Davide Bartasaghi", "Pervis Estupinan", "Matteo Gabbia", "David Odogu", "Strahinja Pavlovic", "Fikayo Tomori"],
         "midfielders": ["Koni De Winter", "Youssouf Fofana", "Ardon Jashari", "Loftus Cheek", "Luka Modric", "Christian Mate Pulisic", "Adrien Rabiot", "Samuele Ricci", "Alexis Saelemaekers"],
         "forwards": ["Niclas Fullkrug", "Santiago Gimenez", "Rafael Leao", "Christopher Nkunku"]
@@ -189,7 +189,7 @@
       "attack": 86,
       "defense": 82,
       "players": {
-        "goalkeepers": ["Nikita Contini", "Alex Meret", "Vanja Milinkovic Savic"],
+        "goalkeepers": ["Vanja Milinkovic Savic"],
         "defenders": ["Sam Beukema", "Alessandro Buongiorno", "Giovanni Di Lorenzo", "Miguel Gutierrez", "Juan Jesus", "Luca Marianucci", "Pasquale Mazzocchi", "Mathias Olivera", "Amir Rrahmani", "Leonardo Spinazzola"],
         "midfielders": ["Ivan Anic", "Kevin De Bruyne", "Eljif Elmas", "Billy Gilmour", "Stanislav Lobotka", "Scott McTominay", "David Neres", "Matteo Politano", "Zambo Anguissa"],
         "forwards": ["Giuseppe Ambrosino", "Rasmus Hojlund", "Noa Lang", "Lorenzo Lucca", "Romelu Lukaku", "Matija Popovic"]
@@ -204,7 +204,7 @@
       "attack": 69,
       "defense": 65,
       "players": {
-        "goalkeepers": ["Edoardo Corvi", "Zion Suzuki"],
+        "goalkeepers": ["Zion Suzuki"],
         "defenders": ["Sascha Britschgi", "Alessandro Circati", "Enrico Delprato", "Mathias Lovik", "Abdoulaye Ndiaye", "Mariano Troilo", "Lautaro Valenti", "Emanele Valeri"],
         "midfielders": ["Pontus Almqvist", "Adrian Bernabe", "Benjamin Cremaschi", "Doro Diop", "Nahuel Estevez", "Hernani", "Mandela Keita", "Jacob Ondrejka", "Christian Ordonez", "Oliver Sorensen"],
         "forwards": ["Adrian Benedyczak", "Patrick Cutrone", "Milan Djuric", "Gaetano Pio Oristanio", "Matteo Pellegrino"]
@@ -219,7 +219,7 @@
       "attack": 67,
       "defense": 63,
       "players": {
-        "goalkeepers": ["Nicolas", "Simone Scuffet", "Adrian Semper", "Ante Vukovic"],
+        "goalkeepers": ["Simone Scuffet"],
         "defenders": ["Raul Albiol", "Simone Angori", "Giovanni Bonfanti", "Arturo Calabresi", "Simone Canestrelli", "Antonio Caracciolo", "Francesco Coppola", "Daniel Denoon", "Tomas Esteves", "Mateus Lusuardi", "Adrian Rus"],
         "midfielders": ["Michel Aebisher", "Ebenezer Akinsanmiro", "Jaime Cuadrado", "Malthe Hojhlolt", "Zan Jevsenak", "Mehdi Leris", "Lorran", "Marius Marin", "Gabriele Piccinini", "Calvin Stengs", "Idrissa Toure", "Matteo Tramoni", "Emanuel Vignato", "Isak Vural"],
         "forwards": ["Louis Thomas Buffon", "Edgaras Dubickas", "Mert Durmush", "Elia Giani", "Nzola MBala", "Henrik Meister", "Stefano Moreo"]
@@ -234,7 +234,7 @@
       "attack": 83,
       "defense": 79,
       "players": {
-        "goalkeepers": ["Pierluigi Gollini", "Mile Svilar", "Devis Vasquez", "Radoslaw Zelezny"],
+        "goalkeepers": ["Mile Svilar"],
         "defenders": ["Angelino", "Mehmet Zeki Celik", "Daniele Ghilardi", "Mario Hermoso", "Gianluca Mancini", "Evan Obite N'Dika", "Devyne Rensch", "Kostas Tsimikas", "Wesley", "Jan Ziolkowski"],
         "midfielders": ["Leon Bailey", "Tommaso Baldanzi", "Bryan Cristante", "Neil El Aynaoui", "Kouadio Koné", "Lorenzo Pellegrini", "Niccolo Pisilli"],
         "forwards": ["Artem Dovbyk", "Paulo Dybala", "Stephan El Shaarawy", "Joe Ferguson", "Matias Soule"]
@@ -249,7 +249,7 @@
       "attack": 75,
       "defense": 67,
       "players": {
-        "goalkeepers": ["Arijanet Muric", "Giacomo Satalino", "Stefano Turati", "Gioele Zacchi"],
+        "goalkeepers": ["Arijanet Muric"],
         "defenders": ["Fali Cande", "Woyo Coulibaly", "Josh Doig", "Jay Izdes", "Tarik Muharemovic", "Cas Odenthal", "Yeferson Paz", "Edoardo Pieragnolo", "Filippo Romagna", "Ruan Tressoldi", "Sebastian Walukiewicz"],
         "midfielders": ["Daniel Boloca", "Alieu Fadera", "Edoardo Iannoni", "Ismael Kone", "Luca Lipani", "Nemanja Matic", "Nicholas Pierini", "Kristian Thorstvedt", "Cristian Volpato", "Aster Vranckx"],
         "forwards": ["Agustin Martinez Alvarez", "Domenico Berardi", "Walid Cheddira", "Armand Laurienté", "Luca Moro", "Andrea Pinamonti", "Laurs Skjellerup"]
@@ -264,7 +264,7 @@
       "attack": 76,
       "defense": 72,
       "players": {
-        "goalkeepers": ["Franco Israel", "Alberto Paleari", "Francesco Plaia", "Mihai Popa"],
+        "goalkeepers": ["Alberto Paleari"],
         "defenders": ["Cristiano Biraghi", "Saul Coco", "Ali Dembele", "Ardian Ismajli", "Giullermo Maripan", "Adam Masina", "Niels Nkounkou", "Marcus Pedersen", "Saba Sazanov", "Perr Schuurs"],
         "midfielders": ["Tino Anjorin", "Kristjan Asllani", "Igor Brzysk", "Cesare Casadei", "Gvidas Gineitis", "Ivan Ilic", "Emirhan Ilkhan", "Valentino Lazaro", "Cyril Ngonge", "Adrien Tameze", "Nikola Vlasic"],
         "forwards": ["Zakaria Aboukhlal", "Che Adams", "Nicolo Franzoni", "Alieu Njie", "Giovanni Simeone", "Asane Sow", "Duvan Zapata", "Michael Zeppieri"]
@@ -279,7 +279,7 @@
       "attack": 75,
       "defense": 71,
       "players": {
-        "goalkeepers": ["Joel Malusà", "Federico Mosca", "Alessandro Nunziante", "Maduka Okoye", "Daniele Padelli", "Razvan Sava"],
+        "goalkeepers": ["Maduka Okoye"],
         "defenders": ["Nicolo Bertola", "Kingsley Ehizibue", "Saba Goglichidze", "Axel Guessand", "Christian Kabasele", "Hassane Kamara", "Thomas Kristensen", "Matteo Palma", "Oumar Solet", "Alessandro Zanoli", "Jordan Zemura"],
         "midfielders": ["Arthur Atta", "Jurgen Ekklenkamp", "Jesper Karlstrom", "Sandi Lovric", "Lennon Miller", "Jakub Piotrowski", "Rui Modesto", "Nicolo Zaniolo", "Oier Zarraga"],
         "forwards": ["Vakoun Issouf Bayo", "Iker Bravo", "Adam Buska", "Keinan Davis", "Idrissa Gueye"]
@@ -294,7 +294,7 @@
       "attack": 70,
       "defense": 66,
       "players": {
-        "goalkeepers": ["Lorenzo Montipò", "Simone Perilli"],
+        "goalkeepers": ["Lorenzo Montipò"],
         "defenders": ["Rafik Belghali", "Armel Bella Kotachap", "Domagoj Bradaric", "Fallou Cham", "Enzo Ebosse", "Martin Frese", "Zaba Nelson", "Victor Nelsson", "Unai Nunez", "Daniel Oyegoke", "Tobias Slotsage", "Nicolas Valentini"],
         "midfielders": ["Akpa-Akpro", "Ali Al Musrati", "Antoine Bernede", "Roberto Gagliardini", "Abdou Harroui", "Grigoris Kastanos", "Cheikh Niasse", "Santiago Perez", "Suat Serdar", "Tomas Suslov", "Veis Yildiz"],
         "forwards": ["Alphadjo Cisse", "Giovane Santana", "Daniel Mosquera", "Gift Orban", "Amin Sarr"]
