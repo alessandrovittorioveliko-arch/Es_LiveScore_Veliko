@@ -6,12 +6,25 @@ import tornado.websocket
 from datetime import datetime
 
 # ============================================================================
-# CARICAMENTO DATABASE SQUADRE
+# CARICAMENTO E NORMALIZZAZIONE DATABASE SQUADRE
 # ============================================================================
+def flatten_players(team):
+    """Converte players da dict per ruoli a lista piatta"""
+    if isinstance(team.get("players"), dict):
+        all_players = []
+        for role, player_list in team["players"].items():
+            all_players.extend(player_list)
+        team["players"] = all_players[:11]  # Massimo 11 titolari
+    return team
+
 with open('teams.json', 'r', encoding='utf-8') as f:
     teams_db = json.load(f)['teams']
 
-print(f"✅ Caricate {len(teams_db)} squadre dal database")
+# NORMALIZZA TUTTE LE SQUADRE
+teams_db = [flatten_players(team) for team in teams_db]
+
+print(f"✅ Caricate {len(teams_db)} squadre con {len(teams_db[0]['players'])} giocatori ciascuna")
+
 
 # ============================================================================
 # CONFIGURAZIONE PROBABILITÀ EVENTI (realistiche per il calcio)
