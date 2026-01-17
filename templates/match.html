@@ -209,9 +209,21 @@
             }
             
             // ----------------------------------------------------------------
+            // FILTRA GLI EVENTI IMPORTANTI
+            // ----------------------------------------------------------------
+            const importantEvents = matchData.events.filter(e => 
+                ['goal', 'yellow_card', 'red_card', 'penalty', 'substitution'].includes(e.type)
+            );
+            
+            if (importantEvents.length === 0) {
+                eventsList.innerHTML = '<p class="no-events">Nessun evento importante ancora</p>';
+                return;
+            }
+            
+            // ----------------------------------------------------------------
             // ORDINA GLI EVENTI (PIÙ RECENTI PRIMA)
             // ----------------------------------------------------------------
-            const sortedEvents = [...matchData.events].reverse();
+            const sortedEvents = [...importantEvents].reverse();
             
             // ----------------------------------------------------------------
             // GENERA L'HTML PER OGNI EVENTO
@@ -247,6 +259,13 @@
                     description = `<strong>${event.player}</strong> (${teamName})`;
                     break;
                     
+                case "penalty":
+                    icon = event.scored ? "⚽🎯" : "❌";
+                    eventClass = event.scored ? "event-goal" : "event-miss";
+                    const penaltyText = event.scored ? "Rigore segnato" : "Rigore sbagliato";
+                    description = `${penaltyText} da <strong>${event.player}</strong> (${teamName})`;
+                    break;
+                    
                 case "yellow_card":
                     icon = "🟨";
                     eventClass = "event-yellow";
@@ -266,9 +285,7 @@
                     break;
                     
                 default:
-                    icon = "📢";
-                    eventClass = "event-other";
-                    description = `Evento generico`;
+                    return ""; // Non mostrare eventi non riconosciuti
             }
             
             // ----------------------------------------------------------------
