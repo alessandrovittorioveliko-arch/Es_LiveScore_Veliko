@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import asyncio
 import json
 import random
@@ -5,9 +6,7 @@ import tornado.web
 import tornado.websocket
 from datetime import datetime
 
-# ============================================================================
 # CARICAMENTO E NORMALIZZAZIONE DATABASE SQUADRE
-# ============================================================================
 def flatten_players(team):
     """Converte players da dict per ruoli a lista piatta"""
     if isinstance(team.get("players"), dict):
@@ -25,10 +24,129 @@ teams_db = [flatten_players(team) for team in teams_db]
 
 print(f"✅ Caricate {len(teams_db)} squadre con {len(teams_db[0]['players'])} giocatori ciascuna")
 
+# SISTEMA DI CAMPIONATO
+class Championship:
+    def __init__(self, teams):
+        self.teams = teams
+        self.standings = {team["id"]: {
+            "name": team["name"],
+            "played": 0,
+            "wins": 0,
+            "draws": 0,
+            "losses": 0,
+            "goals_for": 0,
+            "goals_against": 0,
+            "points": 0
+        } for team in teams}
+        self.matches = {}
+        self.current_matchday = 1
+        self.generate_calendar()
+    
+    def generate_calendar(self):
+        """
+        Genera il calendario del campionato (2 gironi = 38 giornate totali).
+        Tutte le squadre giocano contemporaneamente ogni giornata.
+        """
+        team_list = [t["id"] for t in self.teams]
+        num_teams = len(team_list)
+        
+        # Con 20 squadre: 19 giornate per girone = 38 giornate totali
+        num_matchdays_per_girone = num_teams - 1
+        match_id = 1
+        
+        # Algoritmo round-robin per generare calendario bilanciato
+        for girone in range(2):  # 2 gironi (andata e ritorno)
+            teams_in_round = team_list.copy()
+            
+            for matchday in range(1, num_matchdays_per_girone + 1):
+                # Ottieni gli accoppiamenti per questa giornata
+                matches_in_matchday = 0
+                for i in range(num_teams // 2):
+                    home_id = teams_in_round[i]
+                    away_id = teams_in_round[num_teams - 1 - i]
+                    
+                    # Crea la partita
+                    home_team = next(t for t in self.teams if t["id"] == home_id)
+                    away_team = next(t for t in self.teams if t["id"] == away_id)
+                    
+                    actual_matchday = matchday + (girone * num_matchdays_per_girone)
+                    
+                    self.matches[str(match_id)] = {
+                        "id": str(match_id),
+                        "matchday": actual_matchday,
+                        "home_id": home_id,
+                        "away_id": away_id,
+                        "home": home_team["name"],
+                        "away": away_team["name"],
+                        "home_data": home_team,
+                        "away_data": away_team,
+                        "status": "scheduled",
+                        "minute": 0,
+                        "score": {"home": 0, "away": 0},
+                        "events": [],
+                        "half": 1,
+                        "injury_time": 0
+                    }
+                    match_id += 1
+                    matches_in_matchday += 1
+                
+                # Ruota le squadre per il prossimo round (algoritmo round-robin)
+                # Mantieni il primo fisso, ruota gli altri
+                fixed = teams_in_round[0]
+                teams_in_round = [fixed] + [teams_in_round[-1]] + teams_in_round[1:-1]
+        
+        self.current_matchday = 1
+    
+    def get_matches_by_matchday(self, matchday):
+        """Restituisce le partite di una giornata"""
+        return {mid: m for mid, m in self.matches.items() if m["matchday"] == matchday}
+    
+    def update_standings(self, match_id):
+        """Aggiorna la classifica dopo una partita"""
+        match = self.matches[match_id]
+        if match["status"] != "finished":
+            return
+        
+        home_id = match["home_id"]
+        away_id = match["away_id"]
+        home_score = match["score"]["home"]
+        away_score = match["score"]["away"]
+        
+        # Aggiorna statistiche
+        for team_id, stats in self.standings.items():
+            if team_id == home_id:
+                stats["played"] += 1
+                stats["goals_for"] += home_score
+                stats["goals_against"] += away_score
+                if home_score > away_score:
+                    stats["wins"] += 1
+                    stats["points"] += 3
+                elif home_score == away_score:
+                    stats["draws"] += 1
+                    stats["points"] += 1
+                else:
+                    stats["losses"] += 1
+            elif team_id == away_id:
+                stats["played"] += 1
+                stats["goals_for"] += away_score
+                stats["goals_against"] += home_score
+                if away_score > home_score:
+                    stats["wins"] += 1
+                    stats["points"] += 3
+                elif away_score == home_score:
+                    stats["draws"] += 1
+                    stats["points"] += 1
+                else:
+                    stats["losses"] += 1
+    
+    def get_sorted_standings(self):
+        """Restituisce la classifica ordinata"""
+        standings = list(self.standings.values())
+        standings.sort(key=lambda x: (-x["points"], -(x["goals_for"] - x["goals_against"]), -x["goals_for"]))
+        return standings
 
-# ============================================================================
+
 # CONFIGURAZIONE PROBABILITÀ EVENTI (realistiche per il calcio)
-# ============================================================================
 EVENT_PROBABILITIES = {
     "goal": 0.03,              # 3% per minuto (circa 2-3 goal per partita)
     "yellow_card": 0.025,      # 2.5% per minuto (circa 2-3 cartellini gialli)
@@ -48,62 +166,9 @@ PERIOD_MULTIPLIERS = {
     "injury_time": (91, 95, 1.6) # Recupero: massima intensità
 }
 
-# ============================================================================
-# GENERAZIONE CASUALE DEI MATCH
-# ============================================================================
-def generate_random_matches(num_matches=5):
-    """
-    Genera match casuali selezionando squadre random dal database.
-    """
-    matches = {}
-    available_teams = teams_db.copy()
-    random.shuffle(available_teams)
-    
-    match_statuses = ["live", "live", "live", "scheduled", "finished"]
-    
-    for i in range(num_matches):
-        if len(available_teams) < 2:
-            available_teams = teams_db.copy()
-            random.shuffle(available_teams)
-        
-        home_team = available_teams.pop()
-        away_team = available_teams.pop()
-        
-        status = match_statuses[i] if i < len(match_statuses) else "live"
-        
-        # Genera stato iniziale basato sullo status
-        if status == "live":
-            minute = random.randint(1, 85)
-            home_score, away_score, events = simulate_match_history(
-                home_team, away_team, minute
-            )
-        elif status == "finished":
-            minute = 90
-            home_score, away_score, events = simulate_match_history(
-                home_team, away_team, 90
-            )
-        else:  # scheduled
-            minute = 0
-            home_score = 0
-            away_score = 0
-            events = []
-        
-        match_id = str(i + 1)
-        matches[match_id] = {
-            "id": match_id,
-            "home": home_team["name"],
-            "away": away_team["name"],
-            "home_data": home_team,
-            "away_data": away_team,
-            "status": status,
-            "minute": minute,
-            "score": {"home": home_score, "away": away_score},
-            "events": events,
-            "half": 1 if minute <= 45 else 2,
-            "injury_time": 0
-        }
-    
-    return matches
+# INIZIALIZZA IL CAMPIONATO
+championship = Championship(teams_db[:20])  # Usa tutte le 20 squadre
+matches = championship.matches
 
 
 def simulate_match_history(home_team, away_team, current_minute):
@@ -223,20 +288,16 @@ def generate_event(event_type, minute, home_team, away_team, home_bias, home_sco
     return event
 
 
-# ============================================================================
 # GENERA I MATCH INIZIALI
-# ============================================================================
-matches = generate_random_matches(5)
+# Le partite sono generate dal calendario del campionato
+num_matchdays = max(m["matchday"] for m in matches.values())
+print(f"📅 Calendario generato con {len(matches)} partite ({num_matchdays} giornate)")
 
-# ============================================================================
 # SET GLOBALE PER CLIENT WEBSOCKET
-# ============================================================================
 clients = set()
 
 
-# ============================================================================
 # HANDLER HTTP
-# ============================================================================
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html")
@@ -251,9 +312,7 @@ class MatchHandler(tornado.web.RequestHandler):
         self.render("match.html", match_id=match_id)
 
 
-# ============================================================================
 # HANDLER WEBSOCKET
-# ============================================================================
 class MatchesWebSocket(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
         return True
@@ -266,7 +325,9 @@ class MatchesWebSocket(tornado.websocket.WebSocketHandler):
     async def send_initial_state(self):
         await self.write_message(json.dumps({
             "type": "initial_state",
-            "matches": matches
+            "matches": matches,
+            "standings": championship.get_sorted_standings(),
+            "current_matchday": championship.current_matchday
         }))
     
     def on_close(self):
@@ -274,19 +335,39 @@ class MatchesWebSocket(tornado.websocket.WebSocketHandler):
         clients.remove(self)
 
 
-# ============================================================================
 # SIMULAZIONE MATCH CON PROBABILITÀ REALISTICHE
-# ============================================================================
 async def simulate_matches():
     """
     Loop che simula l'avanzamento dei match con eventi probabilistici realistici.
+    Tutti i match della stessa giornata iniziano insieme e quando finiscono 
+    tutti, passa alla giornata successiva. La classifica si aggiorna in tempo reale.
     """
-    while True:
+    live_matchday = 1
+    max_matchday = max(m["matchday"] for m in matches.values())
+    
+    # Avvia tutte le partite della prima giornata
+    first_matchday_matches = [m for m in matches.values() if m["matchday"] == 1]
+    for match in first_matchday_matches:
+        match["status"] = "live"
+        match["minute"] = 0
+        match["score"] = {"home": 0, "away": 0}
+        match["events"] = []
+    
+    print(f"\n🎯 INIZIO GIORNATA {live_matchday} - {len(first_matchday_matches)} PARTITE IN CAMPO\n")
+    
+    while live_matchday <= max_matchday:
         await asyncio.sleep(1)  # 1 secondo = 1 minuto di gioco
         
         updated_matches = []
+        standings_updated = False
+        
+        # Prendi tutte le partite della giornata corrente
+        current_matchday_matches = [m for m in matches.values() if m["matchday"] == live_matchday]
         
         for match_id, match in matches.items():
+            if match["matchday"] != live_matchday:
+                continue
+            
             if match["status"] != "live":
                 continue
             
@@ -300,7 +381,7 @@ async def simulate_matches():
             if current_minute == 45:
                 match["half"] = 1
                 match["injury_time"] = random.randint(1, 5)
-                print(f"⏱️  Fine 1° tempo: {match['home']} vs {match['away']}")
+                print(f"⏱️  Fine 1° tempo: {match['home']} {match['score']['home']}-{match['score']['away']} {match['away']}")
             
             # Gestione inizio secondo tempo
             if current_minute == 46:
@@ -315,6 +396,8 @@ async def simulate_matches():
             # Fine match
             if current_minute >= 90 + match["injury_time"]:
                 match["status"] = "finished"
+                championship.update_standings(match_id)
+                standings_updated = True
                 print(f"🏁 FINE PARTITA: {match['home']} {match['score']['home']}-{match['score']['away']} {match['away']}")
                 updated_matches.append(match)
                 continue
@@ -342,7 +425,7 @@ async def simulate_matches():
                         match["events"].append(event)
                         
                         # Aggiorna punteggio
-                        if event_type == "goal" and event.get("scored"):
+                        if event_type == "goal" and event.get("scored", True):
                             match["score"][event["team"]] += 1
                             print(f"⚽ GOL! {event['player']} ({event['team_name']}) - "
                                   f"{match['home']} {match['score']['home']}-{match['score']['away']} {match['away']}")
@@ -368,10 +451,12 @@ async def simulate_matches():
         # ----------------------------------------------------------------
         # BROADCAST AGGIORNAMENTI
         # ----------------------------------------------------------------
-        if updated_matches and clients:
+        if (updated_matches or standings_updated) and clients:
             message = json.dumps({
                 "type": "match_update",
-                "matches": updated_matches
+                "matches": updated_matches,
+                "standings": championship.get_sorted_standings() if standings_updated else None,
+                "current_matchday": live_matchday
             })
             
             for client in list(clients):
@@ -379,6 +464,25 @@ async def simulate_matches():
                     await client.write_message(message)
                 except Exception as e:
                     print(f"Errore invio: {e}")
+        
+        # Passa alla giornata successiva quando TUTTE le partite della giornata sono finite
+        if all(m["status"] == "finished" for m in current_matchday_matches):
+            if live_matchday < max_matchday:
+                live_matchday += 1
+                # Avvia tutte le partite della nuova giornata
+                next_matchday_matches = [m for m in matches.values() if m["matchday"] == live_matchday]
+                for match in next_matchday_matches:
+                    match["status"] = "live"
+                    match["minute"] = 0
+                    match["score"] = {"home": 0, "away": 0}
+                    match["events"] = []
+                print(f"\n{'='*70}")
+                print(f"🎯 INIZIO GIORNATA {live_matchday} - {len(next_matchday_matches)} PARTITE IN CAMPO")
+                print(f"{'='*70}\n")
+            else:
+                print(f"\n{'='*70}")
+                print(f"{'='*70}\n")
+                break
 
 
 # ============================================================================
@@ -404,20 +508,7 @@ async def main():
     print("\n✅ Server avviato su http://localhost:8888")
     print("📡 WebSocket disponibile su ws://localhost:8888/ws")
     print("\n📊 MATCH GENERATI:")
-    for match_id, match in matches.items():
-        status_emoji = {"live": "🔴", "scheduled": "📅", "finished": "✅"}[match["status"]]
-        print(f"  {status_emoji} {match['home']} vs {match['away']} - {match['status']}")
-    
-    print("\n🎲 Sistema di probabilità eventi attivo:")
-    print("  • Goal: 3% per minuto (realistico)")
-    print("  • Cartellini gialli: 2.5% per minuto")
-    print("  • Cartellini rossi: 0.3% per minuto (raro)")
-    print("  • Rigori: 0.4% per minuto (raro)")
-    print("  • Corner: 8% per minuto")
-    print("  • Sostituzioni: concentrate dopo il 60°")
-    print("  • Eventi aumentati nel finale (76-90')")
-    
-    print("\n⌨️  Premi CTRL+C per fermare il server\n")
+
     
     asyncio.create_task(simulate_matches())
     await asyncio.Event().wait()
