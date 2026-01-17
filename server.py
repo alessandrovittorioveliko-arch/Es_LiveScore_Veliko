@@ -101,50 +101,12 @@ class Championship:
         """Restituisce le partite di una giornata"""
         return {mid: m for mid, m in self.matches.items() if m["matchday"] == matchday}
     
-    def update_standings(self, match_id):
-        """Aggiorna la classifica dopo una partita"""
-        match = self.matches[match_id]
-        if match["status"] != "finished":
-            return
         
         home_id = match["home_id"]
         away_id = match["away_id"]
         home_score = match["score"]["home"]
         away_score = match["score"]["away"]
         
-        # Aggiorna statistiche
-        for team_id, stats in self.standings.items():
-            if team_id == home_id:
-                stats["played"] += 1
-                stats["goals_for"] += home_score
-                stats["goals_against"] += away_score
-                if home_score > away_score:
-                    stats["wins"] += 1
-                    stats["points"] += 3
-                elif home_score == away_score:
-                    stats["draws"] += 1
-                    stats["points"] += 1
-                else:
-                    stats["losses"] += 1
-            elif team_id == away_id:
-                stats["played"] += 1
-                stats["goals_for"] += away_score
-                stats["goals_against"] += home_score
-                if away_score > home_score:
-                    stats["wins"] += 1
-                    stats["points"] += 3
-                elif away_score == home_score:
-                    stats["draws"] += 1
-                    stats["points"] += 1
-                else:
-                    stats["losses"] += 1
-    
-    def get_sorted_standings(self):
-        """Restituisce la classifica ordinata"""
-        standings = list(self.standings.values())
-        standings.sort(key=lambda x: (-x["points"], -(x["goals_for"] - x["goals_against"]), -x["goals_for"]))
-        return standings
-
 
 # CONFIGURAZIONE PROBABILITÀ EVENTI (realistiche per il calcio)
 EVENT_PROBABILITIES = {
@@ -318,7 +280,7 @@ class MatchesWebSocket(tornado.websocket.WebSocketHandler):
         return True
     
     def open(self):
-        print("🔌 WebSocket aperto - Nuovo client connesso")
+        print(" WebSocket aperto - Nuovo client connesso")
         clients.add(self)
         asyncio.create_task(self.send_initial_state())
     
@@ -331,7 +293,7 @@ class MatchesWebSocket(tornado.websocket.WebSocketHandler):
         }))
     
     def on_close(self):
-        print("❌ WebSocket chiuso - Client disconnesso")
+        print(" WebSocket chiuso - Client disconnesso")
         clients.remove(self)
 
 
