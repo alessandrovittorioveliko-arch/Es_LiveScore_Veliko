@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import asyncio
 import json
 import random
@@ -30,18 +29,81 @@ class Championship:
         self.teams = teams
         self.standings = {team["id"]: {
             "name": team["name"],
-            "played": 0,
-            "wins": 0,
-            "draws": 0,
-            "losses": 0,
-            "goals_for": 0,
-            "goals_against": 0,
+            "played": 0, "wins": 0, "draws": 0, "losses": 0,
+            "goals_for": 0, "goals_against": 0,
             "points": 0
         } for team in teams}
         self.matches = {}
         self.current_matchday = 1
         self.generate_calendar()
-    
+
+    def update_standings(self, match_id):
+        match_id = str(match_id)
+        match = self.matches.get(match_id)
+        if not match:
+            return
+
+        # evita doppio aggiornamento se richiami la funzione più volte
+        if match.get("_standings_updated"):
+            return
+
+        home_id = match["home_id"]
+        away_id = match["away_id"]
+        home_score = match["score"]["home"]
+        away_score = match["score"]["away"]
+
+        home = self.standings[home_id]
+        away = self.standings[away_id]
+
+        home["played"] += 1
+        away["played"] += 1
+
+        home["goals_for"] += home_score
+        home["goals_against"] += away_score
+        away["goals_for"] += away_score
+        away["goals_against"] += home_score
+
+        if home_score > away_score:
+            home["wins"] += 1
+            away["losses"] += 1
+            home["points"] += 3
+        elif home_score < away_score:
+            away["wins"] += 1
+            home["losses"] += 1
+            away["points"] += 3
+        else:
+            home["draws"] += 1
+            away["draws"] += 1
+            home["points"] += 1
+            away["points"] += 1
+
+        match["_standings_updated"] = True
+
+    def get_sorted_standings(self):
+        def sort_key(item):
+            team_id, s = item
+            gd = s["goals_for"] - s["goals_against"]
+            return (s["points"], gd, s["goals_for"], -s["goals_against"], s["name"])
+
+        sorted_items = sorted(self.standings.items(), key=sort_key, reverse=True)
+
+        out = []
+        for pos, (team_id, s) in enumerate(sorted_items, start=1):
+            out.append({
+                "position": pos,
+                "team_id": team_id,
+                "name": s["name"],
+                "played": s["played"],
+                "wins": s["wins"],
+                "draws": s["draws"],
+                "losses": s["losses"],
+                "goals_for": s["goals_for"],
+                "goals_against": s["goals_against"],
+                "goal_diff": s["goals_for"] - s["goals_against"],
+                "points": s["points"],
+            })
+        return out
+
     def generate_calendar(self):
         """
         Genera il calendario del campionato (2 gironi = 38 giornate totali).
